@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Project_CNPM (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Project_CNPM (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
