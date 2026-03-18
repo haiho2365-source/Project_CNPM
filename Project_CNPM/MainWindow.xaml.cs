@@ -1,17 +1,21 @@
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Project_CNPM.Views;
 
-namespace Library
+namespace Project_CNPM
 {
     public sealed partial class MainWindow : Window
     {
-        public static Frame AppFrame;
+        public static Frame Frame;
 
         public MainWindow()
         {
             this.InitializeComponent();
-            AppFrame = RootFrame;
-            AppFrame.Navigate(typeof(Views.LoginPage));
+
+            Frame = RootFrame;
+
+            // 🔥 Quan trọng: phải navigate sau khi InitializeComponent
+            Frame.Navigate(typeof(LoginPage));
         }
     }
 }

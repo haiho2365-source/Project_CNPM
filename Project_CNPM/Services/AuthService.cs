@@ -49,6 +49,7 @@ namespace Library.Services
             using var c = new SqliteConnection("Data Source=library.db");
             c.Open();
 
+            // check trùng
             var check = c.CreateCommand();
             check.CommandText = "SELECT COUNT(*) FROM Users WHERE Username=@u";
             check.Parameters.AddWithValue("@u", u);

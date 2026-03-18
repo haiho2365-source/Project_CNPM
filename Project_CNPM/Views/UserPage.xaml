@@ -3,40 +3,84 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <StackPanel Padding="20" Spacing="10">
+    <Grid Background="#F9FAFB">
 
-        <!-- Search -->
-        <TextBox x:Name="txtSearch" PlaceholderText="Tìm theo tên hoặc tác giả"/>
-        <Button Content="Tìm kiếm" Click="Search_Click"/>
+        <StackPanel Padding="20" Spacing="15">
 
-        <!-- Filter -->
-        <ComboBox x:Name="cbCategory">
-            <ComboBoxItem Content="All"/>
-            <ComboBoxItem Content="IT"/>
-            <ComboBoxItem Content="Math"/>
-        </ComboBox>
-        <Button Content="Lọc" Click="Filter_Click"/>
+            <!-- TITLE -->
+            <TextBlock Text="📚 QUẢN LÝ MƯỢN SÁCH"
+                       FontSize="26"
+                       FontWeight="Bold"/>
 
-        <!-- Book list -->
-        <ListView x:Name="list">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Spacing="20">
-                        <TextBlock Text="{Binding Title}" Width="150"/>
-                        <TextBlock Text="{Binding Author}" Width="120"/>
-                        <TextBlock Text="{Binding Category}" Width="100"/>
-                        <TextBlock Text="{Binding Quantity}" Width="50"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <!-- Actions -->
-        <StackPanel Orientation="Horizontal" Spacing="10">
-            <Button Content="Mượn sách" Click="Borrow_Click"/>
-            <Button Content="Trả sách" Click="Return_Click"/>
-            <Button Content="Sách đã mượn" Click="MyBooks_Click"/>
-            <Button Content="Đăng xuất" Click="Logout_Click"/>
+            <!-- BUTTON LOAD -->
+            <Button Content="🔄 Tải danh sách sách"
+                    Click="Load_Click"
+                    Background="#2563EB"
+                    Foreground="White"/>
+
+            <!-- HEADER BOOK -->
+            <TextBlock Text="📖 DANH SÁCH SÁCH"
+                       FontSize="18"
+                       FontWeight="SemiBold"/>
+
+            <!-- HEADER ROW -->
+            <StackPanel Orientation="Horizontal" Spacing="20">
+                <TextBlock Text="Tên sách" Width="150" FontWeight="Bold"/>
+                <TextBlock Text="Tác giả" Width="120" FontWeight="Bold"/>
+                <TextBlock Text="Thể loại" Width="100" FontWeight="Bold"/>
+                <TextBlock Text="SL" Width="50" FontWeight="Bold"/>
+            </StackPanel>
+
+            <!-- LIST BOOK -->
+            <ListView x:Name="bookList" Height="200" SelectionMode="Single">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Spacing="20">
+                            <TextBlock Text="{Binding Title}" Width="150"/>
+                            <TextBlock Text="{Binding Author}" Width="120"/>
+                            <TextBlock Text="{Binding Category}" Width="100"/>
+                            <TextBlock Text="{Binding Quantity}" Width="50"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- BUTTON BORROW -->
+            <Button Content="📥 Mượn sách"
+                    Click="Borrow_Click"
+                    Background="#16A34A"
+                    Foreground="White"/>
+
+            <!-- BORROW LIST -->
+            <TextBlock Text="📚 SÁCH ĐÃ MƯỢN"
+                       FontSize="18"
+                       FontWeight="SemiBold"/>
+
+            <!-- HEADER -->
+            <StackPanel Orientation="Horizontal" Spacing="20">
+                <TextBlock Text="Tên sách" Width="150" FontWeight="Bold"/>
+                <TextBlock Text="Trạng thái" Width="120" FontWeight="Bold"/>
+            </StackPanel>
+
+            <!-- LIST BORROW -->
+            <ListView x:Name="borrowList" Height="200" SelectionMode="Single">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Spacing="20">
+                            <TextBlock Text="{Binding BookTitle}" Width="150"/>
+                            <TextBlock Text="{Binding Status}" Width="120"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- RETURN BUTTON -->
+            <Button Content="🔄 Trả sách"
+                    Click="Return_Click"
+                    Background="#F59E0B"
+                    Foreground="White"/>
+
         </StackPanel>
 
-    </StackPanel>
+    </Grid>
 </Page>

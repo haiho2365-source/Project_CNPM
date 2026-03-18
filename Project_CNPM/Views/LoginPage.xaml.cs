@@ -1,11 +1,12 @@
-﻿using Library.Models;
+﻿using Library;
 using Library.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Project_CNPM.Services;
 using System;
-using Project_CNPM.Views;
+using System.Threading.Tasks;
 
-namespace Library.Views
+namespace Project_CNPM.Views
 {
     public sealed partial class LoginPage : Page
     {
@@ -14,79 +15,44 @@ namespace Library.Views
             this.InitializeComponent();
         }
 
-        private void Login_Click(object sender, RoutedEventArgs e)
+        private async void Login_Click(object sender, RoutedEventArgs e)
         {
-            var userData = AuthService.Login(user.Text, pass.Password);
-
-            if (userData != null)
+            if (string.IsNullOrEmpty(user.Text) || string.IsNullOrEmpty(pass.Password))
             {
-                if (userData.Role == "Admin")
-                    MainWindow.AppFrame.Navigate(typeof(AdminPage));
-                else
-                    MainWindow.AppFrame.Navigate(typeof(UserPage));
+                await ShowMessage("Vui lòng nhập đầy đủ thông tin");
+                return;
             }
+
+            var u = AuthService.Login(user.Text, pass.Password);
+
+            if (u == null)
+            {
+                await ShowMessage("Sai tài khoản hoặc mật khẩu");
+                return;
+            }
+
+            if (u.Role == "Admin")
+                MainWindow.Frame.Navigate(typeof(AdminPage));
             else
-            {
-                ContentDialog dialog = new ContentDialog
-                {
-                    Title = "Error",
-                    Content = "Sai tài khoản hoặc mật khẩu",
-                    CloseButtonText = "OK",
-                    XamlRoot = this.XamlRoot
-                };
-                dialog.ShowAsync();
-            }
+                MainWindow.Frame.Navigate(typeof(UserPage), u.Id);
         }
 
-        
-
-        private async void Forgot_Click(object sender, RoutedEventArgs e)
+        private void GoRegister_Click(object sender, RoutedEventArgs e)
         {
-            ContentDialog dialog = new ContentDialog
-            {
-                Title = "Reset Password",
-                Content = new StackPanel
-                {
-                    Children =
-            {
-                new TextBox { PlaceholderText = "Username", Name="u"},
-                new TextBox { PlaceholderText = "New Password", Name="p"}
-            }
-                },
-                PrimaryButtonText = "Reset",
-                XamlRoot = this.XamlRoot
-            };
-
-            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
-            {
-                var panel = dialog.Content as StackPanel;
-                var username = (panel.Children[0] as TextBox).Text;
-                var pass = (panel.Children[1] as TextBox).Text;
-
-                AuthService.ResetPassword(username, pass);
-            }
+            MainWindow.Frame.Navigate(typeof(RegisterPage));
         }
-        private async void ShowMessage(string message)
+
+        private async Task ShowMessage(string msg)
         {
             ContentDialog dialog = new ContentDialog()
             {
                 Title = "Thông báo",
-                Content = message,
+                Content = msg,
                 CloseButtonText = "OK",
-                XamlRoot = this.XamlRoot   // QUAN TRỌNG (WinUI 3 bắt buộc)
+                XamlRoot = this.XamlRoot
             };
 
             await dialog.ShowAsync();
-        }
-
-        private void Register_Click(object sender, RoutedEventArgs e)
-        {
-            bool ok = AuthService.Register(user.Text, pass.Password);
-
-            if (ok)
-                ShowMessage("Đăng ký thành công");
-            else
-                ShowMessage("Username đã tồn tại");
         }
     }
 }

@@ -15,6 +15,7 @@
   <ItemGroup>
     <None Remove="AdminPage.xaml" />
     <None Remove="LoginPage.xaml" />
+    <None Remove="RegisterPage.xaml" />
     <None Remove="UserPage.xaml" />
   </ItemGroup>
 
@@ -47,6 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="RegisterPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="AdminPage.xaml">

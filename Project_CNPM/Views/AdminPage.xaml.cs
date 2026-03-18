@@ -1,6 +1,5 @@
 ﻿using Library;
 using Library.Models;
-using Library.Views;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Project_CNPM.Services;
@@ -83,7 +82,7 @@ namespace Project_CNPM.Views
 
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.AppFrame.Navigate(typeof(LoginPage));
+            MainWindow.Frame.Navigate(typeof(LoginPage));
         }
     }
 }

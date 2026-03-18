@@ -1,10 +1,10 @@
 <Page
-  x:Class="Project_CNPM.Views.LoginPage"
+    x:Class="Project_CNPM.Views.RegisterPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Project_CNPM.Views">
 
-    <Grid Background="#F3F4F6">
+    <Grid Background="#EEF2FF">
 
         <Border Width="350"
                 Padding="25"
@@ -15,7 +15,7 @@
 
             <StackPanel Spacing="12">
 
-                <TextBlock Text="🔐 ĐĂNG NHẬP"
+                <TextBlock Text="📝 ĐĂNG KÝ"
                            FontSize="24"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"/>
@@ -26,13 +26,16 @@
                 <PasswordBox x:Name="pass"
                              PlaceholderText="Mật khẩu"/>
 
-                <Button Content="Đăng nhập"
-                        Click="Login_Click"
-                        Background="#2563EB"
+                <PasswordBox x:Name="confirm"
+                             PlaceholderText="Nhập lại mật khẩu"/>
+
+                <Button Content="Đăng ký"
+                        Click="Register_Click"
+                        Background="#16A34A"
                         Foreground="White"/>
 
-                <Button Content="Chưa có tài khoản? Đăng ký"
-                        Click="GoRegister_Click"
+                <Button Content="Quay lại đăng nhập"
+                        Click="Back_Click"
                         Background="Transparent"/>
 
             </StackPanel>

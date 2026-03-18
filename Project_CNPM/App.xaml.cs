@@ -1,9 +1,4 @@
-﻿using Library;
-using Library.Services;
-using Microsoft.UI.Xaml;
-using Project_CNPM; // sửa đúng namespace của bạn
-
-using Project_CNPM.Services;
+﻿using Microsoft.UI.Xaml;
 
 namespace Project_CNPM
 {
@@ -13,15 +8,13 @@ namespace Project_CNPM
 
         public App()
         {
-            this.InitializeComponent(); // dòng này sẽ hết lỗi nếu fix đúng
+            this.InitializeComponent();
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            Database.Initialize();
-
             m_window = new MainWindow();
-            m_window.Activate();
+            m_window.Activate(); // 🔥 nếu thiếu dòng này = KHÔNG HIỆN APP
         }
     }
 }

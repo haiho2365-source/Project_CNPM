@@ -1,71 +1,118 @@
-﻿using Library;
-using Library.Models;
-using Library.Views;
+﻿using Library.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using Project_CNPM.Services;
+using System;
+using System.Collections.Generic;
 
 namespace Project_CNPM.Views
 {
     public sealed partial class UserPage : Page
     {
-        int selectedBookId = -1;
-        int currentUserId = 2; // demo (sau nâng cấp login)
+        private int userId;
+        private Book selectedBook;
+        private Borrow selectedBorrow;
 
         public UserPage()
         {
             this.InitializeComponent();
+        }
+
+        // NHẬN USER ID TỪ LOGIN
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.Parameter != null)
+                userId = (int)e.Parameter;
+        }
+
+        // LOAD DATA
+        private void Load_Click(object sender, RoutedEventArgs e)
+        {
             LoadData();
         }
 
-        void LoadData()
+        private async void LoadData()
         {
-            list.ItemsSource = BookService.GetAll();
+            try
+            {
+                bookList.ItemsSource = BookService.GetAll();
+
+                if (userId > 0)
+                    borrowList.ItemsSource = BorrowService.GetByUser(userId);
+            }
+            catch (Exception ex)
+            {
+                await ShowMessage("Lỗi load dữ liệu: " + ex.Message);
+            }
         }
 
-        private void list_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        // CHỌN SÁCH
+        private void BookList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var b = list.SelectedItem as Book;
-            if (b != null)
-                selectedBookId = b.Id;
+            selectedBook = (Book)bookList.SelectedItem;
         }
 
-        private void Search_Click(object sender, RoutedEventArgs e)
+        // CHỌN SÁCH ĐÃ MƯỢN
+        private void BorrowList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            list.ItemsSource = BookService.Search(txtSearch.Text);
+            selectedBorrow = (Borrow)borrowList.SelectedItem;
         }
 
-        private void Filter_Click(object sender, RoutedEventArgs e)
+        // MƯỢN SÁCH
+        private async void Borrow_Click(object sender, RoutedEventArgs e)
         {
-            var item = cbCategory.SelectedItem as ComboBoxItem;
-            if (item != null && item.Content.ToString() != "All")
-                list.ItemsSource = BookService.Filter(item.Content.ToString());
-            else
-                LoadData();
+            selectedBook = (Book)bookList.SelectedItem;
+
+            if (selectedBook == null)
+            {
+                await ShowMessage("Vui lòng chọn sách");
+                return;
+            }
+
+            if (selectedBook.Quantity <= 0)
+            {
+                await ShowMessage("Sách đã hết");
+                return;
+            }
+
+            BorrowService.BorrowBook(userId, selectedBook.Id);
+
+            await ShowMessage("Mượn sách thành công");
+
+            LoadData();
         }
 
-        private void Borrow_Click(object sender, RoutedEventArgs e)
+        // TRẢ SÁCH
+        private async void Return_Click(object sender, RoutedEventArgs e)
         {
-            if (selectedBookId == -1) return;
+            selectedBorrow = (Borrow)borrowList.SelectedItem;
 
-            BorrowService.BorrowBook(currentUserId, selectedBookId);
+            if (selectedBorrow == null)
+            {
+                await ShowMessage("Vui lòng chọn sách để trả");
+                return;
+            }
+
+            BorrowService.ReturnBook(selectedBorrow.Id, selectedBorrow.BookId);
+
+            await ShowMessage("Trả sách thành công");
+
+            LoadData();
         }
 
-        private void Return_Click(object sender, RoutedEventArgs e)
+        // DIALOG
+        private async System.Threading.Tasks.Task ShowMessage(string message)
         {
-            var borrows = BorrowService.GetByUser(currentUserId);
-            if (borrows.Count > 0)
-                BorrowService.ReturnBook(borrows[0].Id, borrows[0].BookId);
-        }
+            ContentDialog dialog = new ContentDialog()
+            {
+                Title = "Thông báo",
+                Content = message,
+                CloseButtonText = "OK",
+                XamlRoot = this.XamlRoot
+            };
 
-        private void MyBooks_Click(object sender, RoutedEventArgs e)
-        {
-            list.ItemsSource = BorrowService.GetByUser(currentUserId);
-        }
-
-        private void Logout_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow.AppFrame.Navigate(typeof(LoginPage));
+            await dialog.ShowAsync();
         }
     }
 }
